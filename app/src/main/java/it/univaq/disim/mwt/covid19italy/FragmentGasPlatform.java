@@ -34,15 +34,14 @@ public class FragmentGasPlatform extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = view.findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         provider = ViewModelProviders.of(getActivity()).get(GasPlatformViewModel.class);
-        provider.getNearPlatforms().observe(this, new Observer<ArrayList<GasPlatform>>() {
+        provider.getPlatforms().observe(this, new Observer<ArrayList<Provincia>>() {
 
-            public void onChanged(ArrayList<GasPlatform> gasPlatforms) {
-                ADP adp = new ADP(gasPlatforms);
+            public void onChanged(ArrayList<Provincia> province) {
+                ADP adp = new ADP(province);
                 recyclerView.setAdapter(adp);
-
             }
         });
     }
@@ -64,10 +63,10 @@ public class FragmentGasPlatform extends Fragment {
 
     private class ADP extends RecyclerView.Adapter<ADP.ViewHolder> {
 
-        private ArrayList<GasPlatform> data = new ArrayList<>();
+        private ArrayList<Provincia> data = new ArrayList<>();
 
-        public ADP(ArrayList<GasPlatform> gasPlatforms) {
-            this.data.addAll(gasPlatforms);
+        public ADP(ArrayList<Provincia> province) {
+            this.data.addAll(province);
         }
 
         @NonNull
@@ -80,8 +79,8 @@ public class FragmentGasPlatform extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-            holder.title.setText(data.get(position).getDenominazione());
-            holder.subtitle.setText(data.get(position).getCentraleCollegata());
+            holder.title.setText(data.get(position).getNome());
+            holder.subtitle.setText(data.get(position).getRegione());
         }
 
         @Override
@@ -108,7 +107,7 @@ public class FragmentGasPlatform extends Fragment {
                             //Faccio partire l'activity per i dettagli
                             Intent intent = new Intent(getActivity(), DetailsActivity.class);
                             intent.setAction("DETAILS");
-                            intent.putExtra("platform", data.get(getAdapterPosition()));
+                            intent.putExtra("provincia", data.get(getAdapterPosition()));
                             startActivity(intent);
 
                         }

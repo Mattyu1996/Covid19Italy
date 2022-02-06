@@ -7,33 +7,33 @@ import java.util.ArrayList;
 
 public class GasPlatformViewModel extends ViewModel {
 
-    private MutableLiveData<ArrayList<GasPlatform>> platforms = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Provincia>> platforms = new MutableLiveData<>();
 
-    private MutableLiveData<ArrayList<GasPlatform>> nearPlatforms = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Provincia>> nearPlatforms = new MutableLiveData<>();
 
-    public MutableLiveData<GasPlatform> getCurrentPlatform() {
+    public MutableLiveData<Provincia> getCurrentPlatform() {
         return currentPlatform;
     }
 
-    public void setCurrentPlatform(MutableLiveData<GasPlatform> currentPlatform) {
+    public void setCurrentPlatform(MutableLiveData<Provincia> currentPlatform) {
         this.currentPlatform = currentPlatform;
     }
 
-    private MutableLiveData<GasPlatform> currentPlatform = new MutableLiveData<>();
+    private MutableLiveData<Provincia> currentPlatform = new MutableLiveData<>();
 
-    public void setNearPlatforms(ArrayList<GasPlatform> piattaformeVicine){
+    public void setNearPlatforms(ArrayList<Provincia> piattaformeVicine){
         this.nearPlatforms.setValue(piattaformeVicine);
     }
 
-    public void setPlatforms(ArrayList<GasPlatform> piattaforme) {
+    public void setPlatforms(ArrayList<Provincia> piattaforme) {
         this.platforms.setValue(piattaforme);
     }
 
-    public MutableLiveData<ArrayList<GasPlatform>> getPlatforms() {
+    public MutableLiveData<ArrayList<Provincia>> getPlatforms() {
         return this.platforms;
     }
 
-    public MutableLiveData<ArrayList<GasPlatform>> getNearPlatforms(){
+    public MutableLiveData<ArrayList<Provincia>> getNearPlatforms(){
         return this.nearPlatforms;
     }
 }

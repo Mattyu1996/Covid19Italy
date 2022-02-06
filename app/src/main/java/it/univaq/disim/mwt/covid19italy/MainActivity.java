@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -40,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             String action = intent.getAction();
+            Log.i("UEEEEE", intent.getAction());
             if (action.equals(DatabaseService.FILTER_GET)) {
                 GasPlatformViewModel provider = ViewModelProviders.of(MainActivity.this).get(GasPlatformViewModel.class);
-                ArrayList<GasPlatform> platforms = intent.getParcelableArrayListExtra("platforms");
-                provider.setPlatforms(platforms);
+                ArrayList<Provincia> province = intent.getParcelableArrayListExtra("province");
+                Log.i("BROADCAST", ""+province.size());
+                provider.setPlatforms(province);
                 //Aggiorno le piattaforme vicine
-                calculateNearPlatforms();
+                //calculateNearPlatforms();
             }
         }
     };
@@ -60,13 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        //Chiamo il Database Service per aggiornare la lista delle piattaforme nel provider
+        //Chiamo il Database Service per aggiornare la lista delle province nel provider
         Intent intent = new Intent(MainActivity.this, DatabaseService.class);
         intent.putExtra(DatabaseService.EXTRA_ACTION, DatabaseService.ACTION_GET);
         startService(intent);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.frameLayout, new FragmentGasPlatform(), "platforms")
+                .add(R.id.frameLayout, new FragmentGasPlatform(), "province")
                 .commit();
 
     }
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected void calculateNearPlatforms(){
         final GasPlatformViewModel provider = ViewModelProviders.of(MainActivity.this).get(GasPlatformViewModel.class);
-        final ArrayList<GasPlatform> piattaforme = provider.getPlatforms().getValue();
+        final ArrayList<Provincia> piattaforme = provider.getPlatforms().getValue();
         System.out.println("Nel ViewModel ci sono: "+piattaforme.size()+" piattaforme");
         //Controllo se l'app ha il permesso della geolocalizzazione
         if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -155,9 +158,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (Location location : locationresult.getLocations()) {
                             if (location != null) {
-                                ArrayList<GasPlatform> piattaformeVicine = new ArrayList<>();
+                                ArrayList<Provincia> piattaformeVicine = new ArrayList<>();
                                 //Per ogni piattaforma presente nel ViewModel calcolo la distanza dall'utente
-                                for (GasPlatform plt: piattaforme){
+                                for (Provincia plt: piattaforme){
                                     //Calcolo la distanza fra la location dello smartphone e la piattaforme in questione
                                     float[] results = new float[1];
                                     Location.distanceBetween(location.getLatitude(), location.getLongitude(), plt.getLatitudine(), plt.getLongitudine(), results);

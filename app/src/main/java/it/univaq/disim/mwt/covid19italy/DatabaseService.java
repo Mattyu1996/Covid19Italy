@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -16,6 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +48,9 @@ public class DatabaseService extends IntentService {
     }
 
     private void save(Intent intent){
-        ArrayList<GasPlatform> platforms = intent.getParcelableArrayListExtra("platforms");
-        System.out.println("Numero di piattaforme dall'intent: "+ platforms.size());
-        DataBase.getInstance(getApplicationContext()).gasPlatform_dao().save(platforms);
+        ArrayList<Provincia> province = intent.getParcelableArrayListExtra("province");
+        System.out.println("Numero di pronvince dall'intent: "+ province.size());
+        DataBase.getInstance(getApplicationContext()).provincia_dao().save(province);
     }
 
     private void get() {
@@ -54,81 +58,55 @@ public class DatabaseService extends IntentService {
         SharedPreferences pref = getSharedPreferences("preferenze", Context.MODE_PRIVATE);
         //Se è la prima volta che apro l'applicazione dopo averla installata effettuo la richiesta http
         if (pref.getBoolean("firstTime", true)) {
-            StringRequest richiesta = new StringRequest("http://www.bitesrl.it/clienti/univaq/corso/piattaforme.json",
+            Log.i("RICHIESTA HTTP", "EFFETTUO RICHIESTA HTTP");
+            StringRequest richiesta = new StringRequest("https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province-latest.json",
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             // ANDATO TUTTO BENE
                             //System.out.println(response);
-                            final ArrayList<GasPlatform> platforms = new ArrayList<>();
+                            final ArrayList<Provincia> province = new ArrayList<>();
                             try {
                                 JSONArray array = new JSONArray(response);
                                 for (int i = 0; i < array.length(); i++) {
 
                                     JSONObject json = array.optJSONObject(i);
-                                    if (json == null) continue;
+                                    if (json == null || json.optString("lat") == "null") continue;
 
-                                    GasPlatform plt = new GasPlatform();
+                                    Provincia p = new Provincia();
 
                                     //Parsing del JSON
-                                    plt.setDenominazione(json.optString("cdenominazione__"));
-                                    plt.setCodice(json.optInt("ccodice"));
-                                    plt.setStato(json.optString("cstato"));
-                                    String[] str = json.optString("canno_costruzione").split("\\|");
-                                    plt.setAnnoCostruzione(Integer.parseInt(str[0]));
-                                    str = json.optString("ctipo").split("\\|");
-                                    plt.setTipo(str[0]);
-                                    plt.setMinerale(json.optString("cminerale"));
-                                    str = json.optString("coperatore").split("\\|");
-                                    plt.setOperatore(str[0]);
-                                    if (json.getString("cnumero_pozzi_allacciati__") != "") {
-                                        plt.setPozziAllacciati(json.optInt("cnumero_pozzi_allacciati__"));
-                                    }
-                                    if (json.getString("cpozzi_produttivi_non_eroganti") != "") {
-                                        plt.setPozziProduttiviNonEroganti(json.optInt("cpozzi_produttivi_non_eroganti"));
-                                    }
-                                    if (json.getString("cpozzi_in_produzione") != "") {
-                                        plt.setPozziInProduzione(json.optInt("cpozzi_in_produzione"));
-                                    }
-                                    if (json.optString("cpozzi_in_monitoraggio") != "") {
-                                        plt.setPozziInMonitoraggio(json.optInt("cpozzi_in_monitoraggio"));
-                                    }
-
-                                    str = json.optString("ctitolo_minerario").split("\\|");
-                                    plt.setTitoloMinerario(str[0]);
-                                    if (json.optString("ccollegata_alla_centrale") != "") {
-                                        str = json.optString("ccollegata_alla_centrale").split("\\|");
-                                        plt.setCentraleCollegata(str[0]);
-                                    }
-                                    str = json.optString("czona").split("\\|");
-                                    plt.setZona(str[0]);
-                                    plt.setFoglio(json.optString("cfoglio"));
-                                    str = json.optString("csezione_unmig").split("\\|");
-                                    plt.setSezioneUnimig(str[0]);
-                                    str = json.optString("ccapitaneria_di_porto").split("\\|");
-                                    plt.setCapitaneriaDiPorto(str[0]);
-                                    plt.setDistanzaCosta(json.optInt("cdistanza_costa___km_"));
-                                    plt.setAltezza(json.optInt("caltezza_slm__m_"));
-                                    plt.setProfonditaFondale(json.optInt("cprofondit__fondale__m_"));
-                                    plt.setDimensioni(json.optString("cdimensioni"));
-                                    plt.setLatitudine(json.getDouble("clatitudine__wgs84__"));
-                                    plt.setLongitudine(json.getDouble("clongitudine__wgs_84__"));
-
-                                    //Aggiungo la piattaforma alla lista
-                                    platforms.add(plt);
+                                    p.setNome(json.optString("denominazione_provincia"));
+                                    p.setRegione(json.optString("denominazione_regione"));
+                                    p.setStato(json.optString("stato"));
+                                    p.setSigla(json.optString("sigla_provincia"));
+                                    p.setCodiceNuts1(json.optString("codice_nuts_1"));
+                                    p.setCodiceNuts2(json.optString("codice_nuts_2"));
+                                    p.setCodiceNuts3(json.optString("codice_nuts_3"));
+                                    p.setCodiceProvincia(json.optInt("codice_provincia"));
+                                    p.setCodiceRegione(json.optInt("codice_regione"));
+                                    p.setTotaleCasi(json.optInt("totale_casi"));
+                                    p.setLatitudine(json.getDouble("lat"));
+                                    p.setLongitudine(json.getDouble("long"));
+                                    p.setLastUpdateDateTime(new SimpleDateFormat("yyyy-MM-dd").parse(json.optString("data")));
+                                    
+                                    //Aggiungo la provincia alla lista
+                                    province.add(p);
                                 }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
 
-                            System.out.println("La richiesta http ha ottenuto: " + platforms.size() + " piattaforme");
+                            Log.i("RICHIESTA HTTP","La richiesta http ha ottenuto: " + province.size() + " province");
                             //Inserire nel DB
                             Thread t = new Thread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    List<Long> insert = DataBase.getInstance(getApplicationContext()).gasPlatform_dao().save(platforms);
-                                    System.out.println("Inserite nel Database: " + insert.size() + " piattaforme");
+                                    List<Long> insert = DataBase.getInstance(getApplicationContext()).provincia_dao().save(province);
+                                    System.out.println("Inserite nel Database: " + insert.size() + " province");
                                 }
                             });
                             t.start();
@@ -149,10 +127,10 @@ public class DatabaseService extends IntentService {
         }
         else {
             //Altrimenti prendo la lista delle piattaforme dal Database e le restituisco con il LocalBroadcastManager
-            List<GasPlatform> platformList = DataBase.getInstance(getApplicationContext()).gasPlatform_dao().getAll();
-            ArrayList<GasPlatform> piattaforme = new ArrayList<GasPlatform>(platformList);
+            List<Provincia> province = DataBase.getInstance(getApplicationContext()).provincia_dao().getAll();
+            ArrayList<Provincia> piattaforme = new ArrayList<Provincia>(province);
             Intent intent = new Intent(FILTER_GET);
-            intent.putParcelableArrayListExtra("platforms", piattaforme);
+            intent.putParcelableArrayListExtra("province", piattaforme);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }

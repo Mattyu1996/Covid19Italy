@@ -17,55 +17,35 @@ public class DetailsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         TextView stato = findViewById(R.id.valore_stato);
-        TextView tipo = findViewById(R.id.valore_tipo);
-        TextView minerale = findViewById(R.id.valore_minerale);
-        TextView operatore = findViewById(R.id.valore_operatore);
-        TextView titoloMinerario = findViewById(R.id.valore_titoloMinerario);
-        TextView centraleCollegata = findViewById(R.id.valore_centraleCollegata);
-        TextView zona = findViewById(R.id.valore_zona);
-        TextView foglio = findViewById(R.id.valore_foglio);
-        TextView sezioneUnimig = findViewById(R.id.valore_sezioneUnimig);
-        TextView capitaneriaDiPorto = findViewById(R.id.valore_capitaneriaDiPorto);
-        TextView dimensioni = findViewById(R.id.valore_dimensioni);
-        TextView codice = findViewById(R.id.valore_codice);
-        TextView annoCostruzione = findViewById(R.id.valore_annoCostruzione);
-        TextView pozziAllacciati = findViewById(R.id.valore_pozziAllacciati);
-        TextView pozziProduttiviNonEroganti = findViewById(R.id.valore_pozziProduttiviNonEroganti);
-        TextView pozziInProduzione = findViewById(R.id.valore_pozziInProduzione);
-        TextView pozziInMonitoraggio = findViewById(R.id.valore_pozziInMonitoraggio);
-        TextView distanzaCosta = findViewById(R.id.valore_distanzaCosta);
-        TextView altezza = findViewById(R.id.valore_altezza);
-        TextView profonditaFondale = findViewById(R.id.valore_profonditaFondale);
+        TextView regione = findViewById(R.id.valore_regione);
+        TextView sigla = findViewById(R.id.valore_sigla);
+        TextView codiceNuts1 = findViewById(R.id.valore_codice_nuts_1);
+        TextView codiceNuts2 = findViewById(R.id.valore_codice_nuts_2);
+        TextView codiceNuts3 = findViewById(R.id.valore_codice_nuts_3);
+        TextView codiceProvincia = findViewById(R.id.valore_codice_provincia);
+        TextView codiceRegione = findViewById(R.id.valore_codice_regione);
+        TextView casi = findViewById(R.id.valore_casi);
+        TextView ultimoAggiornamento = findViewById(R.id.valore_ultimo_aggiornamento);
+
 
         //Ottengo l'intent
         Intent intent = getIntent();
         //Ottengo la piattaforma dall'intent
-        GasPlatform platform = intent.getParcelableExtra("platform");
-        if(platform != null){
-            //Imposto la denominazione della piattaforma come titolo dell'activity
-            toolbar.setTitle(platform.getDenominazione());
+        Provincia provincia = intent.getParcelableExtra("provincia");
+        if(provincia != null){
+            //Imposto il nome della provincia come titolo dell'activity
+            toolbar.setTitle(provincia.getNome());
             //Imposto tutti i dettagli della piattaforma
-            stato.setText(platform.getStato());
-            tipo.setText(platform.getTipo());
-            minerale.setText(platform.getMinerale());
-            operatore.setText(platform.getOperatore());
-            titoloMinerario.setText(platform.getTitoloMinerario());
-            centraleCollegata.setText(platform.getCentraleCollegata());
-            zona.setText(platform.getZona());
-            foglio.setText(platform.getFoglio());
-            sezioneUnimig.setText(platform.getSezioneUnimig());
-            capitaneriaDiPorto.setText(platform.getCapitaneriaDiPorto());
-            dimensioni.setText(platform.getDimensioni());
-            codice.setText(String.valueOf(platform.getCodice()));
-            annoCostruzione.setText(String.valueOf(platform.getAnnoCostruzione()));
-            pozziAllacciati.setText(String.valueOf(platform.getPozziAllacciati()));
-            pozziProduttiviNonEroganti.setText(String.valueOf(platform.getPozziProduttiviNonEroganti()));
-            pozziInProduzione.setText(String.valueOf(platform.getPozziInProduzione()));
-            pozziInMonitoraggio.setText(String.valueOf(platform.getPozziInMonitoraggio()));
-            distanzaCosta.setText(platform.getDistanzaCosta()+" km");
-            altezza.setText(platform.getAltezza()+" m");
-            profonditaFondale.setText(platform.getProfonditaFondale()+" m");
-
+            stato.setText(provincia.getStato());
+            regione.setText(provincia.getRegione());
+            sigla.setText(provincia.getSigla());
+            codiceNuts1.setText(provincia.getCodiceNuts1());
+            codiceNuts2.setText(provincia.getCodiceNuts2());
+            codiceNuts3.setText(provincia.getCodiceNuts3());
+            codiceProvincia.setText(""+provincia.getCodiceProvincia());
+            codiceRegione.setText(""+provincia.getCodiceRegione());
+            casi.setText(""+provincia.getTotaleCasi());
+            ultimoAggiornamento.setText(provincia.getLastUpdateDateTime().toString());
         }
 
         setSupportActionBar(toolbar);

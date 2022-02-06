@@ -9,11 +9,11 @@ import java.util.List;
 
 
 @Dao
-public interface GasPlatform_DAO {
+public interface Provincia_DAO {
 
-@Query("SELECT * FROM trivelle ORDER BY denominazione ASC")
-List<GasPlatform> getAll();
+@Query("SELECT * FROM province ORDER BY sigla ASC")
+List<Provincia> getAll();
 
 @Insert(onConflict = OnConflictStrategy.REPLACE)
-List<Long> save(List<GasPlatform> gasPlatforms);
+List<Long> save(List<Provincia> province);
 }

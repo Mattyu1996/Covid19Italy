@@ -35,7 +35,7 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
     private MainActivity current;
  private LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-    public static FragmentMaps getInstance(ArrayList<GasPlatform> platforms) {
+    public static FragmentMaps getInstance(ArrayList<Provincia> platforms) {
         FragmentMaps f = new FragmentMaps();
 
         Bundle b = new Bundle();
@@ -99,13 +99,13 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
         if(getArguments() != null) {
 
             //Piazzo i marcatori delle piattaforme
-            ArrayList<GasPlatform> platforms = getArguments().getParcelableArrayList("platforms");
-            for(GasPlatform plt: platforms){
+            ArrayList<Provincia> province = getArguments().getParcelableArrayList("province");
+            for(Provincia p: province){
                 Marker marker = googleMap.addMarker( new MarkerOptions()
-                        .title(plt.getDenominazione())
-                        .position(new LatLng(plt.getLatitudine(), plt.getLongitudine())));
-                marker.setTag(plt);
-                builder.include(new LatLng(plt.getLatitudine(),plt.getLongitudine()));
+                        .title(p.getNome())
+                        .position(new LatLng(p.getLatitudine(), p.getLongitudine())));
+                marker.setTag(p);
+                builder.include(new LatLng(p.getLatitudine(),p.getLongitudine()));
             }
 
            LatLngBounds bounds = builder.build();
@@ -114,10 +114,10 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
 
         }
         else  {
-            ArrayList<GasPlatform> platforms = provider.getNearPlatforms().getValue();
-            for(GasPlatform plt: platforms){
+            ArrayList<Provincia> province = provider.getPlatforms().getValue();
+            for(Provincia plt: province){
                 Marker marker = googleMap.addMarker( new MarkerOptions()
-                .title(plt.getDenominazione())
+                .title(plt.getNome())
                 .position(new LatLng(plt.getLatitudine(), plt.getLongitudine())));
                 marker.setTag(plt);
                 builder.include(new LatLng(plt.getLatitudine(),plt.getLongitudine()));
@@ -134,7 +134,7 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
             @Override
             public void onInfoWindowClick(Marker marker) {
                 //ottengo la posizione del marker
-                GasPlatform plt = (GasPlatform) marker.getTag();
+                Provincia plt = (Provincia) marker.getTag();
                 //Faccio partire l'activity per i dettagli
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.setAction("DETAILS");
