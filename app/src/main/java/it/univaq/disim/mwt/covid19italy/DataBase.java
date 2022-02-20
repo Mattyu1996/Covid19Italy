@@ -8,11 +8,13 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 
-@Database(entities = Provincia.class, version = 1, exportSchema = false)
+@Database(entities = {Provincia.class, HistoricData.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class DataBase extends RoomDatabase {
 
     public abstract Provincia_DAO provincia_dao();
+
+    public abstract HistoricData_DAO historicData_dao();
 
     private static DataBase instance = null;
 

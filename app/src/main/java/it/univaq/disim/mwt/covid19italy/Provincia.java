@@ -3,6 +3,7 @@ package it.univaq.disim.mwt.covid19italy;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,74 +12,70 @@ import java.util.Date;
 @Entity(tableName = "province")
 
 
-    public class Provincia implements Parcelable {
-
-        @PrimaryKey(autoGenerate = true)
-        private Long id;
-
-        private String nome, regione, stato, sigla, codiceNuts1, codiceNuts2, codiceNuts3;
-        private int codiceRegione, codiceProvincia, totaleCasi;
-        private Double latitudine, longitudine;
-        private Date lastUpdateDateTime;
-
-        public Provincia(){}
-
-        public Provincia(Parcel in) {
-            this.nome = in.readString();
-            this.regione = in.readString();
-            this.stato = in.readString();
-            this.sigla = in.readString();
-            this.codiceNuts1 = in.readString();
-            this.codiceNuts2 = in.readString();
-            this.codiceNuts3 = in.readString();
-            this.codiceProvincia = in.readInt();
-            this.codiceRegione = in.readInt();
-            this.totaleCasi = in.readInt();
-            this.latitudine = in.readDouble();
-            this.longitudine = in.readDouble();
-            this.lastUpdateDateTime = (Date) in.readSerializable();
-        }
+public class Provincia implements Parcelable {
 
     public static Parcelable.Creator<Provincia> CREATOR = new Creator<Provincia>() {
-            @Override
-            public Provincia createFromParcel(Parcel source) {
-                return new Provincia(source);
-            }
-
-            @Override
-            public Provincia[] newArray(int size) {
-                return new Provincia[size];
-            }
-        };
-
         @Override
-        public int describeContents() {
-            return 0;
+        public Provincia createFromParcel(Parcel source) {
+            return new Provincia(source);
         }
 
         @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(nome);
-            dest.writeString(regione);
-            dest.writeString(stato);
-            dest.writeString(sigla);
-            dest.writeString(codiceNuts1);
-            dest.writeString(codiceNuts2);
-            dest.writeString(codiceNuts3);
-            dest.writeInt(codiceProvincia);
-            dest.writeInt(codiceRegione);
-            dest.writeInt(totaleCasi);
-            dest.writeDouble(latitudine);
-            dest.writeDouble(longitudine);
-            dest.writeSerializable(lastUpdateDateTime);
+        public Provincia[] newArray(int size) {
+            return new Provincia[size];
         }
+    };
 
-    public Long getId() {
-        return id;
+    @PrimaryKey()
+    @NonNull
+    private String sigla;
+
+    private String nome, regione, stato, codiceNuts1, codiceNuts2, codiceNuts3;
+    private int codiceRegione;
+    private int codiceProvincia;
+    private int totaleCasi;
+    private Double latitudine, longitudine;
+    private Date lastUpdateDateTime;
+
+    public Provincia() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Provincia(Parcel in) {
+        this.nome = in.readString();
+        this.regione = in.readString();
+        this.stato = in.readString();
+        this.sigla = in.readString();
+        this.codiceNuts1 = in.readString();
+        this.codiceNuts2 = in.readString();
+        this.codiceNuts3 = in.readString();
+        this.codiceProvincia = in.readInt();
+        this.codiceRegione = in.readInt();
+        this.totaleCasi = in.readInt();
+        this.latitudine = in.readDouble();
+        this.longitudine = in.readDouble();
+        this.lastUpdateDateTime = (Date) in.readSerializable();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nome);
+        dest.writeString(regione);
+        dest.writeString(stato);
+        dest.writeString(sigla);
+        dest.writeString(codiceNuts1);
+        dest.writeString(codiceNuts2);
+        dest.writeString(codiceNuts3);
+        dest.writeInt(codiceProvincia);
+        dest.writeInt(codiceRegione);
+        dest.writeInt(totaleCasi);
+        dest.writeDouble(latitudine);
+        dest.writeDouble(longitudine);
+        dest.writeSerializable(lastUpdateDateTime);
     }
 
     public String getNome() {
@@ -176,6 +173,7 @@ import java.util.Date;
     public void setLongitudine(Double longitudine) {
         this.longitudine = longitudine;
     }
+
     public Date getLastUpdateDateTime() {
         return lastUpdateDateTime;
     }

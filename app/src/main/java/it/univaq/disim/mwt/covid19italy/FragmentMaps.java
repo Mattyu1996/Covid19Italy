@@ -2,11 +2,16 @@ package it.univaq.disim.mwt.covid19italy;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,9 +88,7 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
             @Override
             public void onSuccess(Location location) {
                 //Imposto la posizione della mappa sulla posizione dello smartphone
-
                 builder.include(new LatLng(location.getLatitude(),location.getLongitude()));
-
 
                 //Piazzo il marcatore dello smartphone
                 MarkerOptions options = new MarkerOptions();
@@ -103,7 +106,9 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
             for(Provincia p: province){
                 Marker marker = googleMap.addMarker( new MarkerOptions()
                         .title(p.getNome())
-                        .position(new LatLng(p.getLatitudine(), p.getLongitudine())));
+                        .position(new LatLng(p.getLatitudine(), p.getLongitudine()))
+                        .snippet("Totale Casi: "+p.getTotaleCasi()));
+
                 marker.setTag(p);
                 builder.include(new LatLng(p.getLatitudine(),p.getLongitudine()));
             }
@@ -118,6 +123,7 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
             for(Provincia plt: province){
                 Marker marker = googleMap.addMarker( new MarkerOptions()
                 .title(plt.getNome())
+                .snippet("Totale Casi: "+plt.getTotaleCasi())
                 .position(new LatLng(plt.getLatitudine(), plt.getLongitudine())));
                 marker.setTag(plt);
                 builder.include(new LatLng(plt.getLatitudine(),plt.getLongitudine()));
@@ -130,15 +136,45 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
 
         }
 
+        googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(getActivity());
+                info.setOrientation(LinearLayout.VERTICAL);
+                TextView title = new TextView(getActivity());
+
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getActivity());
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
             @Override
             public void onInfoWindowClick(Marker marker) {
                 //ottengo la posizione del marker
-                Provincia plt = (Provincia) marker.getTag();
+                Provincia p = (Provincia) marker.getTag();
                 //Faccio partire l'activity per i dettagli
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
                 intent.setAction("DETAILS");
-                intent.putExtra("platform", plt);
+                intent.putExtra("provincia", p);
                 startActivity(intent);
             }
         });

@@ -104,6 +104,8 @@ public class FragmentGasPlatform extends Fragment {
 
                         if(current != null) {
 
+                            Provincia p = data.get(getAdapterPosition());
+
                             //Faccio partire l'activity per i dettagli
                             Intent intent = new Intent(getActivity(), DetailsActivity.class);
                             intent.setAction("DETAILS");

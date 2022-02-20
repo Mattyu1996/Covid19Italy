@@ -29,7 +29,8 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
-
+import java.util.Calendar;
+import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             String action = intent.getAction();
-            Log.i("UEEEEE", intent.getAction());
             if (action.equals(DatabaseService.FILTER_GET)) {
                 GasPlatformViewModel provider = ViewModelProviders.of(MainActivity.this).get(GasPlatformViewModel.class);
                 ArrayList<Provincia> province = intent.getParcelableArrayListExtra("province");
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
         locationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -94,13 +93,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, DatabaseService.class);
         intent.putExtra(DatabaseService.EXTRA_ACTION, DatabaseService.ACTION_GET);
         startService(intent);
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        System.out.println("pausa");
+        System.out.println("MainActivity in pausa");
         LocalBroadcastManager.getInstance(this)
                 .unregisterReceiver(receiver);
     }
