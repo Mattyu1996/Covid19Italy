@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -68,7 +67,7 @@ public class DatabaseService extends IntentService {
         Boolean firstTime = pref.getBoolean("firstTime", true);
         Calendar defaultCalendar = Calendar.getInstance();
         defaultCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3"));
-        Date lastUpdate =  new Date(pref.getLong("lastUpdate", defaultCalendar.getTime().getTime()));
+        Date lastUpdate = new Date(pref.getLong("lastUpdate",Long.MIN_VALUE));
         makeHttpRequest(firstTime, lastUpdate);
     }
 
@@ -130,7 +129,7 @@ public class DatabaseService extends IntentService {
                                     HistoricData h = new HistoricData();
                                     h.setSiglaProvincia(p.getSigla());
                                     h.setNCasi(p.getTotaleCasi());
-                                    h.setData(p.getLastUpdateDateTime());
+                                    h.setData(new SimpleDateFormat("yyyy-MM-dd").parse(json.optString("data")));
                                     dataList.add(h);
                                 }
                                 saveProvinceToDB(province);
@@ -141,9 +140,9 @@ public class DatabaseService extends IntentService {
                                 SharedPreferences.Editor editor = pref.edit();
                                 if(firstTime){
                                     editor.putBoolean("firstTime", false);
-                                    editor.apply();
                                 }
                                 editor.putLong("lastUpdate", httpDate.getTime());
+                                editor.apply();
                                 getProvinceFromDB();
                             }
                             else{

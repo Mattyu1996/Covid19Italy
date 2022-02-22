@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 
-public class FragmentGasPlatform extends Fragment {
+public class FragmentProvinceList extends Fragment {
 
     private MainActivity current;
-    private GasPlatformViewModel provider;
+    private ProvinceViewModel provider;
 
     @Nullable
     @Override
@@ -36,8 +36,8 @@ public class FragmentGasPlatform extends Fragment {
 
         final RecyclerView recyclerView = view.findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        provider = ViewModelProviders.of(getActivity()).get(GasPlatformViewModel.class);
-        provider.getPlatforms().observe(this, new Observer<ArrayList<Provincia>>() {
+        provider = ViewModelProviders.of(getActivity()).get(ProvinceViewModel.class);
+        provider.getProvince().observe(this, new Observer<ArrayList<Provincia>>() {
 
             public void onChanged(ArrayList<Provincia> province) {
                 ADP adp = new ADP(province);

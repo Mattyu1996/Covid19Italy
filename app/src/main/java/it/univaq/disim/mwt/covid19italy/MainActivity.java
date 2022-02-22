@@ -29,8 +29,6 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.TimeZone;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,12 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
             String action = intent.getAction();
             if (action.equals(DatabaseService.FILTER_GET)) {
-                GasPlatformViewModel provider = ViewModelProviders.of(MainActivity.this).get(GasPlatformViewModel.class);
+                ProvinceViewModel provider = ViewModelProviders.of(MainActivity.this).get(ProvinceViewModel.class);
                 ArrayList<Provincia> province = intent.getParcelableArrayListExtra("province");
                 Log.i("BROADCAST", ""+province.size());
-                provider.setPlatforms(province);
-                //Aggiorno le piattaforme vicine
-                //calculateNearPlatforms();
+                provider.setProvince(province);
             }
         }
     };
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         locationClient = LocationServices.getFusedLocationProviderClient(this);
-        GasPlatformViewModel provider = ViewModelProviders.of(this).get(GasPlatformViewModel.class);
+        ProvinceViewModel provider = ViewModelProviders.of(this).get(ProvinceViewModel.class);
 
         setContentView(R.layout.activity_main);
 
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         startService(intent);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.frameLayout, new FragmentGasPlatform(), "province")
+                .add(R.id.frameLayout, new FragmentProvinceList(), "province")
                 .commit();
 
     }
@@ -120,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.listView :
                 //Setto il fragmentList
                 System.out.println("Lista");
-                setMyFragment(new FragmentGasPlatform());
+                setMyFragment(new FragmentProvinceList());
                 break;
             case R.id.mapView :
                 //Setto il fragmentMaps
@@ -129,71 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    protected void calculateNearPlatforms(){
-        final GasPlatformViewModel provider = ViewModelProviders.of(MainActivity.this).get(GasPlatformViewModel.class);
-        final ArrayList<Provincia> piattaforme = provider.getPlatforms().getValue();
-        System.out.println("Nel ViewModel ci sono: "+piattaforme.size()+" piattaforme");
-        //Controllo se l'app ha il permesso della geolocalizzazione
-        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED){
-            //Controllo se il gps è acceso
-            final LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
-            boolean isEnabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            if(isEnabled){
-                //creo la richiesta per la localizzazione
-                final LocationRequest locationRequest = LocationRequest.create();
-                locationRequest.setInterval(60000);
-                locationRequest.setFastestInterval(30000);
-                locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                //creo la funzione di callback da utilizzare nell'aggiornamento della posizione
-                final LocationCallback locationCallback = new LocationCallback(){
-                    @Override
-                    public void onLocationResult(LocationResult locationresult){
-                        if(locationresult == null){
-                            return;
-                        }
-                        for (Location location : locationresult.getLocations()) {
-                            if (location != null) {
-                                ArrayList<Provincia> piattaformeVicine = new ArrayList<>();
-                                //Per ogni piattaforma presente nel ViewModel calcolo la distanza dall'utente
-                                for (Provincia plt: piattaforme){
-                                    //Calcolo la distanza fra la location dello smartphone e la piattaforme in questione
-                                    float[] results = new float[1];
-                                    Location.distanceBetween(location.getLatitude(), location.getLongitude(), plt.getLatitudine(), plt.getLongitudine(), results);
-                                    //Converto la distanza da metri a chilometri
-                                    float distanzaInKm = results[0]/1000;
-                                    //System.out.println("Distanza dalla piattaforma "+plt.getDenominazione()+": "+distanzaInKm+" km");
-                                    //Se la piattaforma è nel raggio di 100km allora la inserisco nelle piattaforme vicine
-                                    if(distanzaInKm <= 100){
-                                        piattaformeVicine.add(plt);
-                                    }
-                                }
-                                provider.setNearPlatforms(piattaformeVicine);
-                                System.out.println("Nel ViewModel ci sono: "+provider.getNearPlatforms().getValue().size()+" piattaforme vicine");
-                            }
-                        }
-                    }
-                };
-                //aggiorno la posizione
-                locationClient.requestLocationUpdates(locationRequest, locationCallback, null);
-            } else {
-                //se il gps è disattivato mostro il dialog per l'attivazione
-                System.out.println("il gps non è attivo");
-                new EnableGPSdialog().show(getSupportFragmentManager(),"nogps");
-            }
-        }
-        else{
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an explanation to the user *asynchronously*
-                new PermissionDialog().show(getSupportFragmentManager(),"permission");
-            } else {
-                // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-            }
-
-        }
     }
 
     @Override

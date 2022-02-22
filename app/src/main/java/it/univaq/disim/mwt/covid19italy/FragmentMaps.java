@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 public class FragmentMaps extends Fragment implements OnMapReadyCallback {
 
-    private GasPlatformViewModel provider;
+    private ProvinceViewModel provider;
     private MainActivity current;
  private LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
@@ -59,7 +59,7 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        provider = ViewModelProviders.of(getActivity()).get(GasPlatformViewModel.class);
+        provider = ViewModelProviders.of(getActivity()).get(ProvinceViewModel.class);
 
         SupportMapFragment map = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         map.getMapAsync(this);
@@ -119,7 +119,7 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
 
         }
         else  {
-            ArrayList<Provincia> province = provider.getPlatforms().getValue();
+            ArrayList<Provincia> province = provider.getProvince().getValue();
             for(Provincia plt: province){
                 Marker marker = googleMap.addMarker( new MarkerOptions()
                 .title(plt.getNome())

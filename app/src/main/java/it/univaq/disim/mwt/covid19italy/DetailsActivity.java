@@ -17,6 +17,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class DetailsActivity extends AppCompatActivity {
@@ -99,9 +100,10 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void updateHistory(List<HistoricData> history){
         HistoricData oggi = history.get(0);
-        //HistoricData ieri = history.get(1);
+        System.out.println(history.size());
+        HistoricData ieri = history.get(1);
         System.out.println(oggi.getSiglaProvincia()+" "+oggi.getNCasi()+" "+oggi.getData());
-        //System.out.println(ieri.getSiglaProvincia()+" "+ieri.getNCasi()+" "+oggi.getData());
+        System.out.println(ieri.getSiglaProvincia()+" "+ieri.getNCasi()+" "+oggi.getData());
     }
 
 }
