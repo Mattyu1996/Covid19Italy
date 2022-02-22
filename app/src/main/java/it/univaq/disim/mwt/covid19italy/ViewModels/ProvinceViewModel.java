@@ -1,9 +1,11 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.ViewModels;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+
+import it.univaq.disim.mwt.covid19italy.Data.Provincia;
 
 public class ProvinceViewModel extends ViewModel {
 

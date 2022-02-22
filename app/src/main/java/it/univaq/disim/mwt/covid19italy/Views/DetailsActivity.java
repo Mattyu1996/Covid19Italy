@@ -1,23 +1,24 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Views;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
+import it.univaq.disim.mwt.covid19italy.Data.DatabaseService;
+import it.univaq.disim.mwt.covid19italy.Data.HistoricData;
+import it.univaq.disim.mwt.covid19italy.Data.Provincia;
+import it.univaq.disim.mwt.covid19italy.R;
 
 
 public class DetailsActivity extends AppCompatActivity {
@@ -30,7 +31,7 @@ public class DetailsActivity extends AppCompatActivity {
             System.out.println(action);
             if (action.equals(DatabaseService.FILTER_HISTORY)) {
                 List<HistoricData> history = intent.getParcelableArrayListExtra("history");
-                updateHistory(history);
+                updateStatistics(history);
             }
         }
     };
@@ -54,6 +55,7 @@ public class DetailsActivity extends AppCompatActivity {
         TextView ultimoAggiornamento = findViewById(R.id.valore_ultimo_aggiornamento);
 
 
+
         //Ottengo l'intent
         Intent provinciaIntent = getIntent();
         //Ottengo la provincia dall'intent
@@ -69,7 +71,7 @@ public class DetailsActivity extends AppCompatActivity {
         if(provincia != null){
             //Imposto il nome della provincia come titolo dell'activity
             toolbar.setTitle(provincia.getNome());
-            //Imposto tutti i dettagli della piattaforma
+            //Imposto tutti i dettagli della provincia
             stato.setText(provincia.getStato());
             regione.setText(provincia.getRegione());
             sigla.setText(provincia.getSigla());
@@ -98,12 +100,21 @@ public class DetailsActivity extends AppCompatActivity {
                 .registerReceiver(receiver, new IntentFilter(DatabaseService.FILTER_HISTORY));
     }
 
-    private void updateHistory(List<HistoricData> history){
-        HistoricData oggi = history.get(0);
+    private void updateStatistics(List<HistoricData> history){
         System.out.println(history.size());
-        HistoricData ieri = history.get(1);
-        System.out.println(oggi.getSiglaProvincia()+" "+oggi.getNCasi()+" "+oggi.getData());
-        System.out.println(ieri.getSiglaProvincia()+" "+ieri.getNCasi()+" "+oggi.getData());
+        TextView casiOggi = findViewById(R.id.valore_casi_oggi);
+        TextView percentuale = findViewById(R.id.valore_percentuale);
+        if(history.size() > 1){
+            HistoricData today = history.get(0);
+            HistoricData yesterday = history.get(0);
+            int todayCases = today.getNCasi()-yesterday.getNCasi();
+            casiOggi.setText(todayCases);
+            if(history.size() > 6){
+                HistoricData lastWeek = history.get(6);
+                float percentage = ((today.getNCasi()-lastWeek.getNCasi())*100)/today.getNCasi();
+                percentuale.setText(percentage+"%");
+            }
+        }
     }
 
 }

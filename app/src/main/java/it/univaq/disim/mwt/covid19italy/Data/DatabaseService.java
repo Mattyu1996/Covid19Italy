@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Data;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -25,6 +25,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import it.univaq.disim.mwt.covid19italy.Data.DataBase;
+import it.univaq.disim.mwt.covid19italy.Data.HistoricData;
+import it.univaq.disim.mwt.covid19italy.Data.Provincia;
+import it.univaq.disim.mwt.covid19italy.Utils.MyVolley;
+
 public class DatabaseService extends IntentService {
     public static final String FILTER_GET = "it.univaq.disim.mwt.covid19italy.GET";
     public static final String FILTER_HISTORY = "it.univaq.disim.mwt.covid19italy.HISTORY";
@@ -48,7 +53,6 @@ public class DatabaseService extends IntentService {
             case ACTION_GET:
                 this.get();
                 break;
-
             case ACTION_GET_HISTORY:
                 this.getHistory(sigla);
                 break;
@@ -66,7 +70,7 @@ public class DatabaseService extends IntentService {
         SharedPreferences pref = getSharedPreferences("preferenze", Context.MODE_PRIVATE);
         Boolean firstTime = pref.getBoolean("firstTime", true);
         Calendar defaultCalendar = Calendar.getInstance();
-        defaultCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3"));
+        defaultCalendar.setTimeZone(TimeZone.getTimeZone("GMT+1"));
         Date lastUpdate = new Date(pref.getLong("lastUpdate",Long.MIN_VALUE));
         makeHttpRequest(firstTime, lastUpdate);
     }

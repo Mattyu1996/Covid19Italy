@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Utils;
 
 
 import android.app.Dialog;
@@ -21,7 +21,7 @@ public class EnableGPSdialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Attiva il gps per visualizzare le piattaforme");
+        builder.setMessage("Attiva il gps per visualizzare le province");
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface d, int id) {

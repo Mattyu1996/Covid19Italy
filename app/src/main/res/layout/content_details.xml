@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".DetailsActivity"
+    tools:context=".Views.DetailsActivity"
     tools:showIn="@layout/activity_details">
 
     <ScrollView
@@ -16,6 +16,38 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/casi_oggi"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:paddingHorizontal="8dp"
+                android:text="Casi oggi"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/valore_casi_oggi"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:paddingHorizontal="8dp"
+                android:text="Dati insufficienti" />
+
+            <TextView
+                android:id="@+id/percentuale"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:paddingHorizontal="8dp"
+                android:text="Incremento settimanale"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/valore_percentuale"
+                android:layout_width="match_parent"
+                android:layout_height="29dp"
+                android:paddingHorizontal="8dp"
+                android:text="Dati insufficienti" />
 
             <TextView
                 android:id="@+id/stato"

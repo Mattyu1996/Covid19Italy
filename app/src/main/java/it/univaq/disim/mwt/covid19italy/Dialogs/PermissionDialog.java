@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Dialogs;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -20,7 +20,7 @@ public class PermissionDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Attenzione!").setMessage("Per poter trovare le piattaforme vicine a te l'applicazione ha bisogno di ottenere il permesso alla geolocalizzazione");
+        builder.setTitle("Attenzione!").setMessage("Per poter trovare la tua provincia l'applicazione ha bisogno di ottenere il permesso alla geolocalizzazione");
         builder.setPositiveButton("Ho capito", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

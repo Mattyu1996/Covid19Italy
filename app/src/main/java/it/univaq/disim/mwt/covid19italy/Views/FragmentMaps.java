@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +33,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
+import it.univaq.disim.mwt.covid19italy.Data.Provincia;
+import it.univaq.disim.mwt.covid19italy.R;
+import it.univaq.disim.mwt.covid19italy.ViewModels.ProvinceViewModel;
+
 
 public class FragmentMaps extends Fragment implements OnMapReadyCallback {
 
@@ -40,11 +44,11 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
     private MainActivity current;
  private LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-    public static FragmentMaps getInstance(ArrayList<Provincia> platforms) {
+    public static FragmentMaps getInstance(ArrayList<Provincia> province) {
         FragmentMaps f = new FragmentMaps();
 
         Bundle b = new Bundle();
-        b.putParcelableArrayList("platforms", platforms);
+        b.putParcelableArrayList("province", province);
 
         f.setArguments(b);
         return f;
@@ -95,7 +99,6 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
                 options.position(new LatLng(location.getLatitude(), location.getLongitude()));
                 options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                 googleMap.addMarker(options);
-
             }
         });
 
@@ -132,7 +135,6 @@ public class FragmentMaps extends Fragment implements OnMapReadyCallback {
             LatLngBounds bounds = builder.build();
             googleMap.moveCamera(
                     CameraUpdateFactory.newLatLngBounds(bounds,100));
-
 
         }
 

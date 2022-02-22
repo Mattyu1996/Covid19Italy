@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,8 +10,6 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 @Entity(tableName = "province")
-
-
 public class Provincia implements Parcelable {
 
     public static Parcelable.Creator<Provincia> CREATOR = new Creator<Provincia>() {

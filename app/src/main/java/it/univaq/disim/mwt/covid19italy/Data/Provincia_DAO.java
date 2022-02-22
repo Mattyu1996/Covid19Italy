@@ -1,11 +1,12 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Data;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import java.util.List;
+
+import it.univaq.disim.mwt.covid19italy.Data.Provincia;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
 

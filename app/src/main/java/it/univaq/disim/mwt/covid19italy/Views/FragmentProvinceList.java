@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Views;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
+import it.univaq.disim.mwt.covid19italy.Data.Provincia;
+import it.univaq.disim.mwt.covid19italy.R;
+import it.univaq.disim.mwt.covid19italy.ViewModels.ProvinceViewModel;
 
 
 public class FragmentProvinceList extends Fragment {
@@ -111,7 +115,6 @@ public class FragmentProvinceList extends Fragment {
                             intent.setAction("DETAILS");
                             intent.putExtra("provincia", data.get(getAdapterPosition()));
                             startActivity(intent);
-
                         }
                     }
                 });

@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

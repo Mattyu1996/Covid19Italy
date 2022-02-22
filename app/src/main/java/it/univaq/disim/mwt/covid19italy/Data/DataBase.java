@@ -1,4 +1,4 @@
-package it.univaq.disim.mwt.covid19italy;
+package it.univaq.disim.mwt.covid19italy.Data;
 
 import android.content.Context;
 
@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+
+import it.univaq.disim.mwt.covid19italy.Utils.Converters;
 
 
 @Database(entities = {Provincia.class, HistoricData.class}, version = 1, exportSchema = false)
